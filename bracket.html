@@ -379,38 +379,15 @@
         tournamentSlot.classList.add('clickable-slot');
         console.log('Updated tournament slot:', tournamentSlot.id || tournamentSlot.textContent);
 
-        // Agregar evento de doble-click a esta casilla para la siguiente ronda
-        tournamentSlot.addEventListener('dblclick', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            handleTournamentSlotClick(e.target);
-        });
-
-        console.log('Added click event to tournament slot');
-    }
-
-    // Función para manejar clic en casillas del torneo
-    function handleTournamentSlotClick(slotElement) {
-        const slotId = slotElement.id;
-        const winnerName = slotElement.textContent.trim();
-
-        console.log('Tournament slot clicked:', slotId, '-', winnerName);
-
-        // Manejar clic en semifinales con split slots
-        if (slotId === 'semifinals-1-label' || slotId === 'semifinals-2-label') {
-            handleSemifinalSlotClick(slotElement, winnerName);
-            return;
-        }
-
-        // Determinar la siguiente ronda y poblar directamente los split slots
+        // Avanzar directamente a los semifinal split slots según el ID
+        const slotId = tournamentSlot.id;
         if (slotId === 'quarterfinals-1-label') {
             // QF1 Winner → Semifinal 1 TOP
             const topSlot = document.getElementById('semifinals-1-top');
             if (topSlot) {
                 topSlot.textContent = winnerName;
                 topSlot.classList.add('clickable-slot');
-                console.log('QF1 winner moved to semifinals-1-top:', winnerName);
+                console.log('QF1 winner advanced to semifinals-1-top:', winnerName);
             }
         } else if (slotId === 'quarterfinals-2-label') {
             // QF2 Winner → Semifinal 1 BOTTOM
@@ -418,7 +395,7 @@
             if (bottomSlot) {
                 bottomSlot.textContent = winnerName;
                 bottomSlot.classList.add('clickable-slot');
-                console.log('QF2 winner moved to semifinals-1-bottom:', winnerName);
+                console.log('QF2 winner advanced to semifinals-1-bottom:', winnerName);
             }
         } else if (slotId === 'quarterfinals-3-label') {
             // QF3 Winner → Semifinal 2 TOP
@@ -426,7 +403,7 @@
             if (topSlot) {
                 topSlot.textContent = winnerName;
                 topSlot.classList.add('clickable-slot');
-                console.log('QF3 winner moved to semifinals-2-top:', winnerName);
+                console.log('QF3 winner advanced to semifinals-2-top:', winnerName);
             }
         } else if (slotId === 'quarterfinals-4-label') {
             // QF4 Winner → Semifinal 2 BOTTOM
@@ -434,9 +411,33 @@
             if (bottomSlot) {
                 bottomSlot.textContent = winnerName;
                 bottomSlot.classList.add('clickable-slot');
-                console.log('QF4 winner moved to semifinals-2-bottom:', winnerName);
+                console.log('QF4 winner advanced to semifinals-2-bottom:', winnerName);
             }
-        } else if (slotId === 'final-label') {
+        }
+
+        // Agregar evento de doble-click a esta casilla (solo para debugging y fallback)
+        tournamentSlot.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log('Tournament slot double-clicked:', slotId, '-', tournamentSlot.textContent);
+            handleTournamentSlotClick(e.target);
+        });
+
+        console.log('Added click event to tournament slot:', slotId);
+    }
+
+    // Función para manejar clic en casillas del torneo (simplificada)
+    function handleTournamentSlotClick(slotElement) {
+        const slotId = slotElement.id;
+        const winnerName = slotElement.textContent.trim();
+
+        console.log('Tournament slot clicked:', slotId, '-', winnerName);
+
+        // Este función ahora es principalmente para fallback y debugging
+        // La lógica principal está en advanceWinner()
+
+        if (slotId === 'final-label') {
             // Campeon - actualizar texto del CHAMPION
             const championSlot = document.querySelector('.champion-text');
             if (championSlot) {
