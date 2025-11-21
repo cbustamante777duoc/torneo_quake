@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tournament Bracket</title>
     <link rel="stylesheet" href="bracket.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -285,6 +286,56 @@
     const styleSheet = document.createElement('style');
     styleSheet.textContent = styles;
     document.head.appendChild(styleSheet);
+
+    // Función para activar el confeti del campeón
+    function triggerChampionConfetti() {
+        console.log('🎉 Triggering champion confetti!');
+
+        // Primera explosión desde la izquierda
+        confetti({
+            particleCount: 100,
+            angle: 0,
+            spread: 90,
+            origin: { x: 0, y: 0.5 },
+            colors: ['#ff6b6b', '#ffd93d', '#10b981', '#3b82f6', '#ffd93d', '#ff6b6b'],
+            scalar: 1.2
+        });
+
+        // Segunda explosión desde la derecha después de un breve delay
+        setTimeout(() => {
+            confetti({
+                particleCount: 100,
+                angle: 180,
+                spread: 90,
+                origin: { x: 1, y: 0.5 },
+                colors: ['#10b981', '#3b82f6', '#ff6b6b', '#ffd93d', '#10b981', '#3b82f6'],
+                scalar: 1.2
+            });
+        }, 100);
+
+        // Explosión central desde arriba (estilo "school pride")
+        setTimeout(() => {
+            confetti({
+                particleCount: 150,
+                angle: 90,
+                spread: 270,
+                origin: { x: 0.5, y: 0 },
+                colors: ['#ffd93d', '#ff6b6b', '#10b981', '#3b82f6'],
+                scalar: 1.5
+            });
+        }, 250);
+
+        // Gran explosión final desde el centro
+        setTimeout(() => {
+            confetti({
+                particleCount: 200,
+                spread: 360,
+                origin: { x: 0.5, y: 0.5 },
+                colors: ['#ffd93d', '#ff6b6b', '#10b981', '#3b82f6', '#ffd93d', '#ff6b6b'],
+                scalar: 1.8
+            });
+        }, 400);
+    }
 
     // Función principal del torneo
     function initTournament() {
@@ -669,6 +720,9 @@
             championSlot.textContent = winnerName;
             championSlot.classList.add('winner');
             console.log('CHAMPION:', winnerName);
+
+            // 🎉 Activar el confeti del campeón inmediatamente
+            triggerChampionConfetti();
         }
     }
 
