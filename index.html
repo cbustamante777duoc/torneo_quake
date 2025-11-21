@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Bracket - Esports</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="tournament-container">
+        <!-- Header -->
+        <div class="tournament-header">
+            <h1>TORNEO ESPORTS</h1>
+            <div class="tournament-info">
+                <span>16 Equipos</span>
+                <span>•</span>
+                <span>Liga Todos vs Todos</span>
+                <span>•</span>
+                <span>Jornada 5</span>
+            </div>
+            <div class="tournament-nav">
+                <a href="bracket.html" class="bracket-link">
+                    Ver Torneo de Eliminación Directa →
+                </a>
+            </div>
+        </div>
+
+        <!-- Standings Table -->
+        <div class="standings-container">
+            <table class="standings-table">
+                <thead>
+                    <tr>
+                        <th class="col-position">POS</th>
+                        <th class="col-team">EQUIPO</th>
+                        <th class="col-pj">PJ</th>
+                        <th class="col-pg">PG</th>
+                        <th class="col-pe">PE</th>
+                        <th class="col-pp">PP</th>
+                        <th class="col-gf">GF</th>
+                        <th class="col-gc">GC</th>
+                        <th class="col-dg">DG</th>
+                        <th class="col-pts">PTS</th>
+                        <th class="col-form">FORMA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 1st Place -->
+                    <tr class="team-row promotion">
+                        <td class="position">1</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🔥</span>
+                                <span class="team-name" contenteditable="true">Team Alpha</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">4</td>
+                        <td class="pe">1</td>
+                        <td class="pp">0</td>
+                        <td class="gf">12</td>
+                        <td class="gc">3</td>
+                        <td class="dg">+9</td>
+                        <td class="points">13</td>
+                        <td class="form">
+                            <span class="form-result win">G</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result win">G</span>
+                        </td>
+                    </tr>
+
+                    <!-- 2nd Place -->
+                    <tr class="team-row promotion">
+                        <td class="position">2</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">⚡</span>
+                                <span class="team-name" contenteditable="true">Team Bravo</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">4</td>
+                        <td class="pe">0</td>
+                        <td class="pp">1</td>
+                        <td class="gf">11</td>
+                        <td class="gc">4</td>
+                        <td class="dg">+7</td>
+                        <td class="points">12</td>
+                        <td class="form">
+                            <span class="form-result win">G</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result win">G</span>
+                        </td>
+                    </tr>
+
+                    <!-- 3rd Place -->
+                    <tr class="team-row playoff">
+                        <td class="position">3</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🎯</span>
+                                <span class="team-name" contenteditable="true">Team Charlie</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">3</td>
+                        <td class="pe">1</td>
+                        <td class="pp">1</td>
+                        <td class="gf">9</td>
+                        <td class="gc">5</td>
+                        <td class="dg">+4</td>
+                        <td class="points">10</td>
+                        <td class="form">
+                            <span class="form-result draw">E</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                        </td>
+                    </tr>
+
+                    <!-- 4th Place -->
+                    <tr class="team-row playoff">
+                        <td class="position">4</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🛡️</span>
+                                <span class="team-name" contenteditable="true">Team Delta</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">3</td>
+                        <td class="pe">0</td>
+                        <td class="pp">2</td>
+                        <td class="gf">8</td>
+                        <td class="gc">7</td>
+                        <td class="dg">+1</td>
+                        <td class="points">9</td>
+                        <td class="form">
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                        </td>
+                    </tr>
+
+                    <!-- 5th Place -->
+                    <tr class="team-row">
+                        <td class="position">5</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🚀</span>
+                                <span class="team-name" contenteditable="true">Team Echo</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">2</td>
+                        <td class="pe">2</td>
+                        <td class="pp">1</td>
+                        <td class="gf">7</td>
+                        <td class="gc">6</td>
+                        <td class="dg">+1</td>
+                        <td class="points">8</td>
+                        <td class="form">
+                            <span class="form-result win">G</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result win">G</span>
+                        </td>
+                    </tr>
+
+                    <!-- 6th Place -->
+                    <tr class="team-row">
+                        <td class="position">6</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">💎</span>
+                                <span class="team-name" contenteditable="true">Team Foxtrot</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">2</td>
+                        <td class="pe">1</td>
+                        <td class="pp">2</td>
+                        <td class="gf">6</td>
+                        <td class="gc">7</td>
+                        <td class="dg">-1</td>
+                        <td class="points">7</td>
+                        <td class="form">
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                        </td>
+                    </tr>
+
+                    <!-- 7th Place -->
+                    <tr class="team-row">
+                        <td class="position">7</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🌟</span>
+                                <span class="team-name" contenteditable="true">Team Golf</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">1</td>
+                        <td class="pe">2</td>
+                        <td class="pp">2</td>
+                        <td class="gf">5</td>
+                        <td class="gc">8</td>
+                        <td class="dg">-3</td>
+                        <td class="points">5</td>
+                        <td class="form">
+                            <span class="form-result draw">E</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result loss">P</span>
+                        </td>
+                    </tr>
+
+                    <!-- 8th Place -->
+                    <tr class="team-row">
+                        <td class="position">8</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🎮</span>
+                                <span class="team-name" contenteditable="true">Team Hotel</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">1</td>
+                        <td class="pe">1</td>
+                        <td class="pp">3</td>
+                        <td class="gf">4</td>
+                        <td class="gc">9</td>
+                        <td class="dg">-5</td>
+                        <td class="points">4</td>
+                        <td class="form">
+                            <span class="form-result loss">P</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result loss">P</span>
+                        </td>
+                    </tr>
+
+                    <!-- 9th Place -->
+                    <tr class="team-row">
+                        <td class="position">9</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">⚔️</span>
+                                <span class="team-name" contenteditable="true">Team India</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">1</td>
+                        <td class="pe">0</td>
+                        <td class="pp">4</td>
+                        <td class="gf">3</td>
+                        <td class="gc">10</td>
+                        <td class="dg">-7</td>
+                        <td class="points">3</td>
+                        <td class="form">
+                            <span class="form-result loss">P</span>
+                            <span class="form-result win">G</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result loss">P</span>
+                        </td>
+                    </tr>
+
+                    <!-- 10th Place -->
+                    <tr class="team-row">
+                        <td class="position">10</td>
+                        <td class="team">
+                            <div class="team-info">
+                                <span class="team-logo">🏹</span>
+                                <span class="team-name" contenteditable="true">Team Juliet</span>
+                            </div>
+                        </td>
+                        <td class="pj">5</td>
+                        <td class="pg">0</td>
+                        <td class="pe">2</td>
+                        <td class="pp">3</td>
+                        <td class="gf">4</td>
+                        <td class="gc">8</td>
+                        <td class="dg">-4</td>
+                        <td class="points">2</td>
+                        <td class="form">
+                            <span class="form-result loss">P</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result loss">P</span>
+                            <span class="form-result draw">E</span>
+                            <span class="form-result loss">P</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color promotion"></div>
+                <span>Promoción Directa</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color playoff"></div>
+                <span>Playoffs</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

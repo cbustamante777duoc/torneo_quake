@@ -1,0 +1,334 @@
+@use "sass:math";
+
+$side-margin: 50px;
+$vertical-margin: 10px;
+
+// Tournament color palette (from design)
+$primary-color: #0d1b2a;       // Azul marino fondo
+$secondary-color: #ff0000;     // Rojo para líneas conectoras
+$accent-color: #ff6b35;        // Naranja brillante para ganadores
+$bg-gradient-start: #0A0000;   // Rojo muy oscuro casi negro
+$bg-gradient-end: #1A0000;     // Rojo oscuro (para gradiente)
+$item-bg: #000000;             // Negro para tarjetas
+$text-dark: #ffffff;           // Texto blanco normal
+$text-light: #6c757d;          // Texto gris claro
+$line-color: #ff0000;          // Rojo para líneas
+$shadow-light: rgba(0, 0, 0, 0.2);
+$shadow-medium: rgba(0, 0, 0, 0.3);
+
+body{
+  background: linear-gradient(135deg, $bg-gradient-start 0%, $bg-gradient-end 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.wrapper{
+  display: flex;
+  height: auto;
+  min-height: 600px;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  overflow: visible;
+}
+
+.item{
+  display: flex;
+  flex-direction: row-reverse;
+  p{
+    padding: 16px 24px;
+    margin: 0;
+    background: $item-bg;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px $shadow-light;
+    color: $text-dark;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    min-width: 140px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    &:hover, &:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px $shadow-medium;
+      border-color: $secondary-color;
+
+      &:before {
+        left: 100%;
+      }
+    }
+
+    // Contenteditable styles
+    &[contenteditable="true"]:hover,
+    &[contenteditable="true"]:focus {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      cursor: text;
+      outline: 2px solid $secondary-color;
+      outline-offset: -2px;
+    }
+
+    // Eliminated and winner states
+    &.eliminated {
+      text-decoration: line-through;
+      opacity: 0.6;
+      color: $text-light;
+    }
+
+    &.winner {
+      font-weight: 700;
+      color: $accent-color;
+    }
+  }
+  
+  &-parent{
+    position: relative;
+    margin-left: $side-margin;
+    display: flex;
+    align-items: center;
+
+    &:after{
+        position: absolute;
+        content: '';
+        width: math.div($side-margin, 2);
+        height: 3px;
+        left: 0;
+        top: 50%;
+        background: linear-gradient(90deg, $line-color, $secondary-color);
+        transform: translateX(-100%);
+        border-radius: 2px;
+        box-shadow: 0 2px 4px $shadow-light;
+    }
+  }
+  &-childrens{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &-child{
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin-top: $vertical-margin;
+    margin-bottom: $vertical-margin;
+    position: relative;
+
+    &:before{
+      content: '';
+      position: absolute;
+      background: linear-gradient(90deg, $secondary-color, $line-color);
+      right: 0;
+      top: 50%;
+      transform: translateX(100%);
+      width: 25px;
+      height: 3px;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px $shadow-light;
+    }
+
+    &:after{
+      content: '';
+      position: absolute;
+      background: linear-gradient(180deg, $line-color, $secondary-color);
+      right: math.div(-$side-margin, 2);
+      height: calc(50% + 30px);
+      width: 3px;
+      top: 50%;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px $shadow-light;
+    }
+
+    &:last-child{
+      &:after{
+        transform: translateY(-100%);
+        background: linear-gradient(180deg, $secondary-color, $line-color);
+      }
+    }
+
+    &:only-child:after{
+      display: none;
+    }
+
+    // Add subtle animation to children
+    p {
+      animation: slideIn 0.5s ease-out;
+    }
+  }
+}
+
+// Champion container and logo styles
+.champion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 10;
+  margin-top: -70px; // Move entire container up by another 10px for perfect horizontal alignment
+}
+
+.champion-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  background: $item-bg;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px $shadow-light;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover, &:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px $shadow-medium;
+    border-color: $secondary-color;
+
+    &:before {
+      left: 100%;
+    }
+  }
+}
+
+.champion-text {
+  padding: 8px 16px;
+  margin: 0;
+  background: $item-bg;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px $shadow-light;
+  color: $text-dark;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  min-width: 120px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover, &:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px $shadow-medium;
+    border-color: $secondary-color;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+
+    &:before {
+      left: 100%;
+    }
+  }
+}
+
+// Keyframe animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 20px 10px;
+    min-height: auto;
+  }
+
+  .item p {
+    min-width: 100px;
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+
+  $side-margin: 30px;
+  .item-parent {
+    margin-left: $side-margin;
+  }
+
+  .item-child:after {
+    right: math.div(-$side-margin, 2);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .wrapper {
+    padding: 10px 5px;
+  }
+
+  .item p {
+    min-width: 80px;
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  $side-margin: 20px;
+  .item-parent {
+    margin-left: $side-margin;
+  }
+
+  .item-child:after {
+    right: math.div(-$side-margin, 2);
+  }
+}
+
+// Add smooth transitions for entire bracket
+.wrapper * {
+  transition: all 0.3s ease;
+}

@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Bracket</title>
+    <link rel="stylesheet" href="bracket.css">
+</head>
+<body>
+<div class="wrapper">
+  <div class="item">
+    <div class="item-parent">
+      <div class="champion-container">
+        <img src="./assets/quake-logo.png" alt="CHAMPION" class="champion-logo" width="60" height="60">
+        <p contenteditable="true" class="champion-text">CHAMPION</p>
+      </div>
+    </div>
+    <div class="item-childrens">
+      <div class="item-child">
+        <div class="item">
+          <div class="item-parent">
+            <p contenteditable="true">FINALISTA 1</p>
+          </div>
+          <div class="item-childrens">
+            <div class="item-child">
+              <div class="item">
+                <div class="item-parent">
+                  <p contenteditable="true">SEMIFINALISTA 1</p>
+                </div>
+                <div class="item-childrens">
+                  <div class="item-child">
+                    <div class="item">
+                      <div class="item-parent">
+                        <p contenteditable="true">CUARTOS 1</p>
+                      </div>
+                      <div class="item-childrens">
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo A</p>
+                        </div>
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo B</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item-child">
+                    <div class="item">
+                      <div class="item-parent">
+                        <p contenteditable="true">CUARTOS 2</p>
+                      </div>
+                      <div class="item-childrens">
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo C</p>
+                        </div>
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo D</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item-child">
+              <div class="item">
+                <div class="item-parent">
+                  <p contenteditable="true">SEMIFINALISTA 2</p>
+                </div>
+                <div class="item-childrens">
+                  <div class="item-child">
+                    <div class="item">
+                      <div class="item-parent">
+                        <p contenteditable="true">CUARTOS 3</p>
+                      </div>
+                      <div class="item-childrens">
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo E</p>
+                        </div>
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo F</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item-child">
+                    <div class="item">
+                      <div class="item-parent">
+                        <p contenteditable="true">CUARTOS 4</p>
+                      </div>
+                      <div class="item-childrens">
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo G</p>
+                        </div>
+                        <div class="item-child">
+                          <p contenteditable="true">Equipo H</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+  </div>
+</div>
+<script>
+    // Función para doble clic - tachar/deshacer tachar
+    function handleDoubleClick(event) {
+        if (event.target.tagName === 'P' && event.target.hasAttribute('contenteditable')) {
+            event.preventDefault();
+            event.target.classList.toggle('eliminated');
+        }
+    }
+
+    // Inicializar eventos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar evento de doble clic para tachar
+        const editableElements = document.querySelectorAll('p[contenteditable="true"]');
+        editableElements.forEach(element => {
+            element.addEventListener('dblclick', handleDoubleClick);
+        });
+
+        // Prevenir que contenteditable pierda el foco al presionar Enter
+        editableElements.forEach(element => {
+            element.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    e.target.blur();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
