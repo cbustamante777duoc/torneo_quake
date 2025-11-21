@@ -21,26 +21,26 @@
       <div class="item-child">
         <div class="item">
           <div class="item-parent">
-            <p contenteditable="true">FINALISTA 1</p>
+            <p contenteditable="true" id="final-label" data-next="champion">FINALISTA 1</p>
           </div>
           <div class="item-childrens">
             <div class="item-child">
               <div class="item">
                 <div class="item-parent">
-                  <p contenteditable="true">SEMIFINALISTA 1</p>
+                  <p contenteditable="true" id="semifinals-1-label" data-next="final">SEMIFINALISTA 1</p>
                 </div>
                 <div class="item-childrens">
                   <div class="item-child">
                     <div class="item">
                       <div class="item-parent">
-                        <p contenteditable="true">CUARTOS 1</p>
+                        <p contenteditable="true" id="quarterfinals-1-label">CUARTOS 1</p>
                       </div>
                       <div class="item-childrens">
                         <div class="item-child">
-                          <p contenteditable="true">Equipo A</p>
+                          <p contenteditable="true" data-match="qf1-1" data-next="quarterfinals-1">Cristian</p>
                         </div>
                         <div class="item-child">
-                          <p contenteditable="true">Equipo B</p>
+                          <p contenteditable="true" data-match="qf1-2" data-next="quarterfinals-1">Cesar</p>
                         </div>
                       </div>
                     </div>
@@ -48,14 +48,14 @@
                   <div class="item-child">
                     <div class="item">
                       <div class="item-parent">
-                        <p contenteditable="true">CUARTOS 2</p>
+                        <p contenteditable="true" id="quarterfinals-2-label">CUARTOS 2</p>
                       </div>
                       <div class="item-childrens">
                         <div class="item-child">
-                          <p contenteditable="true">Equipo C</p>
+                          <p contenteditable="true" data-match="qf2-1" data-next="quarterfinals-2">Diego</p>
                         </div>
                         <div class="item-child">
-                          <p contenteditable="true">Equipo D</p>
+                          <p contenteditable="true" data-match="qf2-2" data-next="quarterfinals-2">Valentina</p>
                         </div>
                       </div>
                     </div>
@@ -66,20 +66,20 @@
             <div class="item-child">
               <div class="item">
                 <div class="item-parent">
-                  <p contenteditable="true">SEMIFINALISTA 2</p>
+                  <p contenteditable="true" id="semifinals-2-label" data-next="final">SEMIFINALISTA 2</p>
                 </div>
                 <div class="item-childrens">
                   <div class="item-child">
                     <div class="item">
                       <div class="item-parent">
-                        <p contenteditable="true">CUARTOS 3</p>
+                        <p contenteditable="true" id="quarterfinals-3-label">CUARTOS 3</p>
                       </div>
                       <div class="item-childrens">
                         <div class="item-child">
-                          <p contenteditable="true">Equipo E</p>
+                          <p contenteditable="true" data-match="qf3-1" data-next="quarterfinals-3">Elias</p>
                         </div>
                         <div class="item-child">
-                          <p contenteditable="true">Equipo F</p>
+                          <p contenteditable="true" data-match="qf3-2" data-next="quarterfinals-3">Critofer</p>
                         </div>
                       </div>
                     </div>
@@ -87,14 +87,14 @@
                   <div class="item-child">
                     <div class="item">
                       <div class="item-parent">
-                        <p contenteditable="true">CUARTOS 4</p>
+                        <p contenteditable="true" id="quarterfinals-4-label">CUARTOS 4</p>
                       </div>
                       <div class="item-childrens">
                         <div class="item-child">
-                          <p contenteditable="true">Equipo G</p>
+                          <p contenteditable="true" data-match="qf4-1" data-next="quarterfinals-4">Por Definir</p>
                         </div>
                         <div class="item-child">
-                          <p contenteditable="true">Equipo H</p>
+                          <p contenteditable="true" data-match="qf4-2" data-next="quarterfinals-4">Cupo Libre</p>
                         </div>
                       </div>
                     </div>
@@ -109,32 +109,267 @@
   </div>
 </div>
 <script>
-    // Función para doble clic - tachar/deshacer tachar
-    function handleDoubleClick(event) {
-        if (event.target.tagName === 'P' && event.target.hasAttribute('contenteditable')) {
-            event.preventDefault();
-            event.target.classList.toggle('eliminated');
+    // Función simple para encontrar elementos por texto
+    function findByText(tag, text) {
+        const elements = document.getElementsByTagName(tag);
+        for (let el of elements) {
+            if (el.textContent.trim() === text) {
+                return el;
+            }
+        }
+        return null;
+    }
+
+    // Agregar estilos CSS
+    const styles = `
+        .winner {
+            background: linear-gradient(135deg, #10b981, #34d399) !important;
+            color: white !important;
+            font-weight: bold !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+            border: 2px solid #10b981 !important;
+        }
+
+        .loser {
+            background: #1f2937 !important;
+            color: #6b7280 !important;
+            opacity: 0.8 !important;
+            text-decoration: line-through !important;
+            transform: scale(0.95) !important;
+            border-color: #374151 !important;
+        }
+
+        .eliminated {
+            background: #374151 !important;
+            color: #9ca3af !important;
+            opacity: 0.6 !important;
+            text-decoration: line-through !important;
+            transform: scale(0.95) !important;
+        }
+
+        .advanced {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa) !important;
+            color: white !important;
+            font-weight: bold !important;
+            animation: pulse 2s infinite !important;
+        }
+
+        .clickable-slot {
+            cursor: pointer !important;
+            border: 2px solid rgba(100, 255, 218, 0.6) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .clickable-slot:hover {
+            background: rgba(100, 255, 218, 0.2) !important;
+            transform: scale(1.02) !important;
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3) !important;
+        }
+
+        .ready-for-selection {
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d) !important;
+            animation: glow 2s infinite !important;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); }
+        }
+
+        .winner:hover {
+            transform: scale(1.08) translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
+        }
+
+        .loser:hover {
+            transform: scale(0.98) !important;
+            filter: brightness(0.9) !important;
+        }
+    `;
+
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+
+    // Función principal del torneo
+    function initTournament() {
+        console.log('Tournament initialized');
+
+        // Seleccionar SOLO los jugadores de los cuartos de final
+        const players = [
+            findByText('p', 'Cristian'),
+            findByText('p', 'Cesar'),
+            findByText('p', 'Diego'),
+            findByText('p', 'Valentina'),
+            findByText('p', 'Elias'),
+            findByText('p', 'Critofer'),
+            findByText('p', 'Por Definir'),
+            findByText('p', 'Cupo Libre')
+        ];
+
+        console.log('Players found:', players.length);
+
+        // Agregar evento de doble click a cada jugador
+        players.forEach((player, index) => {
+            if (player) {
+                player.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    console.log('Double-clicked:', player.textContent);
+
+                    const playerName = player.textContent.trim();
+
+                    // No permitir seleccionar nombres vacíos o placeholders
+                    if (!playerName || playerName === 'Por Definir' || playerName === 'Cupo Libre') {
+                        console.log('Invalid player selected');
+                        return;
+                    }
+
+                    // Encontrar el contenedor del partido
+                    const container = player.closest('.item-childrens');
+                    if (!container) {
+                        console.log('No container found');
+                        return;
+                    }
+
+                    // Encontrar todos los jugadores en este partido
+                    const playersInMatch = container.querySelectorAll('p');
+                    console.log('Players in match:', playersInMatch.length);
+
+                    // Resetear estilos primero
+                    playersInMatch.forEach(p => {
+                        p.classList.remove('winner', 'loser');
+                    });
+
+                    // Marcar ganador
+                    player.classList.add('winner');
+                    console.log('Winner marked:', playerName);
+
+                    // Marcar oponente como eliminado
+                    playersInMatch.forEach(p => {
+                        if (p !== player && p.textContent.trim() &&
+                            !['CUARTOS 1', 'CUARTOS 2', 'CUARTOS 3', 'CUARTOS 4',
+                              'SEMIFINALISTA 1', 'SEMIFINALISTA 2',
+                              'FINALISTA 1', 'CHAMPION'].includes(p.textContent.trim())) {
+                            p.classList.add('loser');
+                            console.log('Loser marked:', p.textContent);
+                        }
+                    });
+
+                    // Avanzar al siguiente ronda
+                    advanceWinner(playerName, container);
+                });
+
+                console.log('Event bound to:', player.textContent);
+            }
+        });
+    }
+
+    // Función para avanzar ganador - CORREGIDA
+    function advanceWinner(winnerName, fromContainer) {
+        console.log('Advancing winner:', winnerName);
+
+        // Encontrar el contenedor del partido actual
+        const currentMatch = fromContainer.closest('.item');
+        if (!currentMatch) return;
+
+        // Encontrar la casilla del torneo que corresponde a este partido
+        const tournamentSlot = currentMatch.querySelector('.item-parent p');
+        if (!tournamentSlot) return;
+
+        // Actualizar la casilla del torneo con el nombre del ganador
+        tournamentSlot.textContent = winnerName;
+        tournamentSlot.classList.add('winner');
+        tournamentSlot.classList.add('clickable-slot');
+        console.log('Updated tournament slot:', tournamentSlot.id || tournamentSlot.textContent);
+
+        // Agregar evento de doble-click a esta casilla para la siguiente ronda
+        tournamentSlot.addEventListener('dblclick', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            handleTournamentSlotClick(e.target);
+        });
+
+        console.log('Added click event to tournament slot');
+    }
+
+    // Función para manejar clic en casillas del torneo
+    function handleTournamentSlotClick(slotElement) {
+        const slotId = slotElement.id;
+        const winnerName = slotElement.textContent.trim();
+
+        console.log('Tournament slot clicked:', slotId, '-', winnerName);
+
+        // Determinar la siguiente ronda
+        let nextSlotId = null;
+
+        if (slotId === 'quarterfinals-1-label') {
+            nextSlotId = 'semifinals-1-label';
+        } else if (slotId === 'quarterfinals-2-label') {
+            nextSlotId = 'semifinals-1-label';
+        } else if (slotId === 'quarterfinals-3-label') {
+            nextSlotId = 'semifinals-2-label';
+        } else if (slotId === 'quarterfinals-4-label') {
+            nextSlotId = 'semifinals-2-label';
+        } else if (slotId === 'semifinals-1-label') {
+            nextSlotId = 'final-label';
+        } else if (slotId === 'semifinals-2-label') {
+            nextSlotId = 'final-label';
+        } else if (slotId === 'final-label') {
+            // Campeon - actualizar texto del CHAMPION
+            const championSlot = document.querySelector('.champion-text');
+            if (championSlot) {
+                championSlot.textContent = winnerName;
+                championSlot.classList.add('winner');
+                console.log('CHAMPION:', winnerName);
+            }
+            return;
+        }
+
+        if (nextSlotId) {
+            const nextSlot = document.getElementById(nextSlotId);
+            if (nextSlot) {
+                // Verificar si este es el primer ganador o si necesitamos comparar
+                if (!nextSlot.dataset.winner1) {
+                    nextSlot.dataset.winner1 = winnerName;
+                    nextSlot.textContent = winnerName + ' vs ???';
+                    nextSlot.classList.add('advanced');
+                    console.log('First winner set for', nextSlotId);
+                } else if (!nextSlot.dataset.winner2) {
+                    nextSlot.dataset.winner2 = winnerName;
+                    nextSlot.textContent = nextSlot.dataset.winner1 + ' vs ' + winnerName;
+                    nextSlot.classList.add('advanced', 'ready-for-selection');
+                    console.log('Second winner set for', nextSlotId);
+                } else {
+                    // Ambos ganadores están listos, permitir selección
+                    nextSlot.classList.add('clickable-slot');
+                    console.log('Both winners ready for', nextSlotId);
+                }
+            }
         }
     }
 
-    // Inicializar eventos
+    // Inicializar cuando el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
-        // Agregar evento de doble clic para tachar
-        const editableElements = document.querySelectorAll('p[contenteditable="true"]');
-        editableElements.forEach(element => {
-            element.addEventListener('dblclick', handleDoubleClick);
-        });
-
-        // Prevenir que contenteditable pierda el foco al presionar Enter
-        editableElements.forEach(element => {
-            element.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    e.target.blur();
-                }
-            });
-        });
+        console.log('DOM ready, initializing tournament...');
+        initTournament();
+        console.log('Tournament initialized successfully!');
     });
+
+    // Función de debug
+    window.debugTournament = function() {
+        console.log('All players with events:');
+        const players = document.querySelectorAll('p[contenteditable="true"]');
+        players.forEach(p => console.log('-', p.textContent.trim()));
+    };
 </script>
 </body>
 </html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working Tournament Bracket</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0A0000 0%, #1A0000 100%);
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tournament-container {
+            background: rgba(20, 25, 47, 0.8);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .tournament-title {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .round {
+            margin-bottom: 40px;
+        }
+
+        .round-title {
+            color: #64ffda;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .matchup-pair {
+            background: rgba(10, 14, 39, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 107, 107, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .matchup-pair:hover {
+            border-color: rgba(255, 107, 107, 0.3);
+            transform: translateX(5px);
+        }
+
+        .player {
+            background: #000000;
+            border-radius: 8px;
+            padding: 16px 24px;
+            margin: 8px 0;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            min-width: 140px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .player:hover, .player:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-color: rgba(100, 255, 218, 0.4);
+        }
+
+        .player:hover:before {
+            left: 100%;
+        }
+
+        .player.winner {
+            background: linear-gradient(135deg, #10b981, #34d399) !important;
+            color: white !important;
+            font-weight: bold !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+            border: 2px solid #10b981 !important;
+        }
+
+        .player.eliminated {
+            opacity: 0.5 !important;
+            text-decoration: line-through !important;
+            background-color: #222 !important;
+            color: #9ca3af !important;
+            transform: scale(0.95) !important;
+        }
+
+        .player.eliminated:hover {
+            transform: scale(0.98) !important;
+            filter: brightness(0.9) !important;
+        }
+
+        .next-round-slot {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa) !important;
+            color: white !important;
+            font-weight: bold !important;
+            animation: pulse 2s infinite !important;
+            margin-top: 20px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+    </style>
+</head>
+<body>
+    <div class="tournament-container">
+        <h1 class="tournament-title">Cuartos de Final</h1>
+
+        <div class="round">
+            <h2 class="round-title">Primera Ronda</h2>
+
+            <!-- Matchup 1: Cristian vs Cesar -->
+            <div class="matchup-pair" data-match="1">
+                <div class="player" data-player="Cristian">Cristian</div>
+                <div class="player" data-player="Cesar">Cesar</div>
+            </div>
+
+            <!-- Matchup 2: Diego vs Valentina -->
+            <div class="matchup-pair" data-match="2">
+                <div class="player" data-player="Diego">Diego</div>
+                <div class="player" data-player="Valentina">Valentina</div>
+            </div>
+
+            <!-- Matchup 3: Elias vs Critofer -->
+            <div class="matchup-pair" data-match="3">
+                <div class="player" data-player="Elias">Elias</div>
+                <div class="player" data-player="Critofer">Critofer</div>
+            </div>
+
+            <!-- Matchup 4: Por Definir vs Cupo Libre -->
+            <div class="matchup-pair" data-match="4">
+                <div class="player" data-player="Por Definir">Por Definir</div>
+                <div class="player" data-player="Cupo Libre">Cupo Libre</div>
+            </div>
+        </div>
+
+        <div class="round">
+            <h2 class="round-title">Siguientes Rondas</h2>
+
+            <!-- Semifinals slots -->
+            <div class="matchup-pair" data-match="semifinals">
+                <div class="player next-round-slot" data-slot="semifinal-1">Esperando Ganador 1</div>
+                <div class="player next-round-slot" data-slot="semifinal-2">Esperando Ganador 2</div>
+            </div>
+
+            <!-- Final slot -->
+            <div class="matchup-pair" data-match="final">
+                <div class="player next-round-slot" data-slot="final">Esperando Finalista</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SimpleTournament {
+            constructor() {
+                this.winners = {};
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                console.log('Tournament initialized');
+            }
+
+            bindEvents() {
+                // Select all player elements in quarterfinals (not next-round-slot)
+                const players = document.querySelectorAll('.matchup-pair[data-match="1"] .player, .matchup-pair[data-match="2"] .player, .matchup-pair[data-match="3"] .player, .matchup-pair[data-match="4"] .player');
+
+                console.log(`Found ${players.length} players to bind events to`);
+
+                players.forEach((player, index) => {
+                    // Add double-click event for winner selection
+                    player.addEventListener('dblclick', (e) => this.handleWinnerSelection(e));
+
+                    console.log(`Bound double-click event to: ${player.textContent}`);
+                });
+            }
+
+            handleWinnerSelection(event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const winner = event.target;
+                const winnerName = winner.textContent.trim();
+
+                console.log(`Winner selected: ${winnerName}`);
+
+                // Don't allow selection of placeholder names
+                if (winnerName === 'Por Definir' || winnerName === 'Cupo Libre' || !winnerName) {
+                    console.log('Invalid player selected');
+                    return;
+                }
+
+                // Find the matchup container
+                const matchup = winner.closest('.matchup-pair');
+                if (!matchup) {
+                    console.log('No matchup found');
+                    return;
+                }
+
+                // Find all players in this matchup
+                const playersInMatchup = matchup.querySelectorAll('.player');
+                console.log(`Found ${playersInMatchup.length} players in matchup`);
+
+                // Reset all players in this matchup first
+                playersInMatchup.forEach(player => {
+                    player.classList.remove('winner', 'eliminated');
+                });
+
+                // Mark the winner
+                winner.classList.add('winner');
+
+                // Find and eliminate the opponent
+                const opponent = this.findOpponent(winner, playersInMatchup);
+                if (opponent) {
+                    opponent.classList.add('eliminated');
+                    console.log(`Eliminated: ${opponent.textContent}`);
+                }
+
+                // Store winner and advance to next round
+                const matchId = matchup.dataset.match;
+                this.winners[matchId] = winnerName;
+                console.log(`Winner stored for match ${matchId}: ${winnerName}`);
+
+                this.advanceToNextRound(matchId, winnerName);
+            }
+
+            findOpponent(winner, allPlayers) {
+                // Return the first player that's not the winner
+                for (let player of allPlayers) {
+                    if (player !== winner) {
+                        return player;
+                    }
+                }
+                return null;
+            }
+
+            advanceToNextRound(matchId, winnerName) {
+                console.log(`Advancing ${winnerName} from match ${matchId}`);
+
+                // Simple advancement logic - you can customize this
+                if (matchId === '1' || matchId === '2') {
+                    const semifinalSlot = document.querySelector('[data-slot="semifinal-1"]');
+                    if (semifinalSlot && matchId === '1') {
+                        semifinalSlot.textContent = winnerName;
+                        semifinalSlot.classList.remove('next-round-slot');
+                    } else if (semifinalSlot && matchId === '2') {
+                        const secondSlot = document.querySelector('[data-slot="semifinal-2"]');
+                        if (secondSlot) {
+                            secondSlot.textContent = winnerName;
+                            secondSlot.classList.remove('next-round-slot');
+                        }
+                    }
+                } else if (matchId === '3' || matchId === '4') {
+                    const secondSlot = document.querySelector('[data-slot="semifinal-2"]');
+                    if (secondSlot && matchId === '3') {
+                        // Handle as needed
+                    } else if (matchId === '4') {
+                        // Handle as needed
+                    }
+                }
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM ready, initializing tournament...');
+            window.tournament = new SimpleTournament();
+            console.log('Tournament initialized successfully');
+        });
+
+        // Debug function
+        window.debugTournament = function() {
+            console.log('Current winners:', window.tournament.winners);
+            console.log('All player elements:', document.querySelectorAll('.player'));
+        };
+    </script>
+</body>
+</html>
