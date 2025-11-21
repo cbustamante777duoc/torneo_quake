@@ -172,6 +172,54 @@
             animation: glow 2s infinite !important;
         }
 
+        /* SPLIT SLOT STYLES FOR SEMIFINALS */
+        .semi-split-container {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        .semi-slot {
+            height: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            font-weight: 600 !important;
+            font-size: 12px !important;
+            color: #ffffff !important;
+            text-align: center !important;
+            border-radius: 6px !important;
+            margin: 2px 0 !important;
+            padding: 8px !important;
+        }
+
+        .semi-slot:hover {
+            background: rgba(100, 255, 218, 0.3) !important;
+            transform: scale(1.02) !important;
+            z-index: 10 !important;
+            box-shadow: 0 4px 10px rgba(100, 255, 218, 0.4) !important;
+        }
+
+        .semi-slot.winner {
+            background: linear-gradient(135deg, #10b981, #34d399) !important;
+            color: white !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+            border: 2px solid #10b981 !important;
+            z-index: 20 !important;
+        }
+
+        .semi-slot.loser {
+            background: #1f2937 !important;
+            color: #6b7280 !important;
+            opacity: 0.7 !important;
+            text-decoration: line-through !important;
+            transform: scale(0.95) !important;
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
@@ -308,21 +356,45 @@
 
         console.log('Tournament slot clicked:', slotId, '-', winnerName);
 
-        // Determinar la siguiente ronda
-        let nextSlotId = null;
+        // Manejar clic en semifinales con split slots
+        if (slotId === 'semifinals-1-label' || slotId === 'semifinals-2-label') {
+            handleSemifinalSlotClick(slotElement, winnerName);
+            return;
+        }
 
+        // Determinar la siguiente ronda y poblar directamente los split slots
         if (slotId === 'quarterfinals-1-label') {
-            nextSlotId = 'semifinals-1-label';
+            // QF1 Winner → Semifinal 1 TOP
+            const topSlot = document.getElementById('semifinals-1-top');
+            if (topSlot) {
+                topSlot.textContent = winnerName;
+                topSlot.classList.add('clickable-slot');
+                console.log('QF1 winner moved to semifinals-1-top:', winnerName);
+            }
         } else if (slotId === 'quarterfinals-2-label') {
-            nextSlotId = 'semifinals-1-label';
+            // QF2 Winner → Semifinal 1 BOTTOM
+            const bottomSlot = document.getElementById('semifinals-1-bottom');
+            if (bottomSlot) {
+                bottomSlot.textContent = winnerName;
+                bottomSlot.classList.add('clickable-slot');
+                console.log('QF2 winner moved to semifinals-1-bottom:', winnerName);
+            }
         } else if (slotId === 'quarterfinals-3-label') {
-            nextSlotId = 'semifinals-2-label';
+            // QF3 Winner → Semifinal 2 TOP
+            const topSlot = document.getElementById('semifinals-2-top');
+            if (topSlot) {
+                topSlot.textContent = winnerName;
+                topSlot.classList.add('clickable-slot');
+                console.log('QF3 winner moved to semifinals-2-top:', winnerName);
+            }
         } else if (slotId === 'quarterfinals-4-label') {
-            nextSlotId = 'semifinals-2-label';
-        } else if (slotId === 'semifinals-1-label') {
-            nextSlotId = 'final-label';
-        } else if (slotId === 'semifinals-2-label') {
-            nextSlotId = 'final-label';
+            // QF4 Winner → Semifinal 2 BOTTOM
+            const bottomSlot = document.getElementById('semifinals-2-bottom');
+            if (bottomSlot) {
+                bottomSlot.textContent = winnerName;
+                bottomSlot.classList.add('clickable-slot');
+                console.log('QF4 winner moved to semifinals-2-bottom:', winnerName);
+            }
         } else if (slotId === 'final-label') {
             // Campeon - actualizar texto del CHAMPION
             const championSlot = document.querySelector('.champion-text');
@@ -331,29 +403,163 @@
                 championSlot.classList.add('winner');
                 console.log('CHAMPION:', winnerName);
             }
-            return;
+        }
+    }
+
+    // Función para inicializar split slots en semifinales
+    function initializeSemifinalSplitSlots() {
+        const semis = ['semifinals-1-label', 'semifinals-2-label'];
+
+        semis.forEach(semiId => {
+            const semiSlot = document.getElementById(semiId);
+            if (semiSlot && !semiSlot.classList.contains('split-initialized')) {
+                // Crear contenedor de split
+                const splitContainer = document.createElement('div');
+                splitContainer.className = 'semi-split-container';
+
+                // Crear slots superior e inferior
+                const topSlot = document.createElement('div');
+                topSlot.className = 'semi-slot';
+                topSlot.id = semiId.replace('-label', '-top');
+                topSlot.textContent = 'Esperando ganador';
+
+                const bottomSlot = document.createElement('div');
+                bottomSlot.className = 'semi-slot';
+                bottomSlot.id = semiId.replace('-label', '-bottom');
+                bottomSlot.textContent = 'Esperando ganador';
+
+                // Agregar al contenedor
+                splitContainer.appendChild(topSlot);
+                splitContainer.appendChild(bottomSlot);
+
+                // Reemplazar contenido
+                semiSlot.innerHTML = '';
+                semiSlot.appendChild(splitContainer);
+
+                // Agregar eventos a los slots
+                topSlot.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSemifinalSlotClick(this, this.textContent.trim());
+                });
+
+                bottomSlot.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSemifinalSlotClick(this, this.textContent.trim());
+                });
+
+                // Marcar como inicializado
+                semiSlot.classList.add('split-initialized');
+            }
+        });
+    }
+
+    // Función para poblar split slots individuales
+    function populateSemifinalSplitSlot(semiId, winnerName) {
+        const semiSlot = document.getElementById(semiId);
+        if (!semiSlot || semiSlot.classList.contains('split-initialized')) return;
+
+        // Inicializar si no está inicializado
+        if (!semiSlot.classList.contains('split-initialized')) {
+            initializeSemifinalSplitSlots();
         }
 
-        if (nextSlotId) {
-            const nextSlot = document.getElementById(nextSlotId);
-            if (nextSlot) {
-                // Verificar si este es el primer ganador o si necesitamos comparar
-                if (!nextSlot.dataset.winner1) {
-                    nextSlot.dataset.winner1 = winnerName;
-                    nextSlot.textContent = winnerName + ' vs ???';
-                    nextSlot.classList.add('advanced');
-                    console.log('First winner set for', nextSlotId);
-                } else if (!nextSlot.dataset.winner2) {
-                    nextSlot.dataset.winner2 = winnerName;
-                    nextSlot.textContent = nextSlot.dataset.winner1 + ' vs ' + winnerName;
-                    nextSlot.classList.add('advanced', 'ready-for-selection');
-                    console.log('Second winner set for', nextSlotId);
-                } else {
-                    // Ambos ganadores están listos, permitir selección
-                    nextSlot.classList.add('clickable-slot');
-                    console.log('Both winners ready for', nextSlotId);
-                }
+        // Encontrar el siguiente slot vacío
+        let targetSlot = null;
+
+        if (semiId === 'semifinals-1-label') {
+            const topSlot = document.getElementById('semifinals-1-top');
+            const bottomSlot = document.getElementById('semifinals-1-bottom');
+
+            if (topSlot && topSlot.textContent.includes('Esperando')) {
+                targetSlot = topSlot;
+            } else if (bottomSlot && bottomSlot.textContent.includes('Esperando')) {
+                targetSlot = bottomSlot;
             }
+        } else if (semiId === 'semifinals-2-label') {
+            const topSlot = document.getElementById('semifinals-2-top');
+            const bottomSlot = document.getElementById('semifinals-2-bottom');
+
+            if (topSlot && topSlot.textContent.includes('Esperando')) {
+                targetSlot = topSlot;
+            } else if (bottomSlot && bottomSlot.textContent.includes('Esperando')) {
+                targetSlot = bottomSlot;
+            }
+        }
+
+        if (targetSlot) {
+            targetSlot.textContent = winnerName;
+            targetSlot.classList.add('clickable-slot');
+            console.log('Populated split slot:', targetSlot.id, 'with:', winnerName);
+        }
+    }
+
+    // Función para manejar clic en slots de semifinales
+    function handleSemifinalSlotClick(slotElement, playerName) {
+        if (!playerName || playerName.includes('Esperando')) return;
+
+        console.log('Semifinal slot clicked:', playerName);
+
+        // Encontrar el contenedor semifinal
+        const semiContainer = slotElement.closest('[id$="-label"]');
+        if (!semiContainer) return;
+
+        // Resetear estilos en este semifinal
+        semiContainer.querySelectorAll('.semi-slot').forEach(slot => {
+            slot.classList.remove('winner', 'loser');
+        });
+
+        // Marcar ganador
+        slotElement.classList.add('winner');
+
+        // Marcar otro slot como perdedor
+        semiContainer.querySelectorAll('.semi-slot').forEach(slot => {
+            if (slot !== slotElement && !slot.textContent.includes('Esperando')) {
+                slot.classList.add('loser');
+                console.log('Semifinal loser marked:', slot.textContent);
+            }
+        });
+
+        // Avanzar a la final
+        advanceToFinal(playerName);
+    }
+
+    // Función para avanzar a la final
+    function advanceToFinal(winnerName) {
+        console.log('Advancing', winnerName, 'to final');
+
+        const finalSlot = document.getElementById('final-label');
+        if (finalSlot) {
+            finalSlot.textContent = winnerName;
+            finalSlot.classList.add('winner', 'clickable-slot');
+
+            // Agregar evento de doble-click para la final
+            finalSlot.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleFinalMatch(e.target);
+            });
+
+            console.log('Advanced', winnerName, 'to final');
+        }
+    }
+
+    // Función para manejar la final
+    function handleFinalMatch(winnerElement) {
+        const winnerName = winnerElement.textContent.trim();
+
+        console.log('Final match clicked:', winnerName);
+
+        // Marcar como campeón
+        winnerElement.classList.add('winner');
+
+        // Actualizar el texto del CHAMPION
+        const championSlot = document.querySelector('.champion-text');
+        if (championSlot) {
+            championSlot.textContent = winnerName;
+            championSlot.classList.add('winner');
+            console.log('CHAMPION:', winnerName);
         }
     }
 
@@ -361,6 +567,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM ready, initializing tournament...');
         initTournament();
+        initializeSemifinalSplitSlots(); // Inicializar split slots
         console.log('Tournament initialized successfully!');
     });
 
