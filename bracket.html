@@ -220,6 +220,47 @@
             transform: scale(0.95) !important;
         }
 
+        /* SPLIT SLOT STYLES FOR FINAL */
+        .final-split-container {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        .final-slot {
+            height: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            font-weight: 700 !important;
+            font-size: 14px !important;
+            color: #ffd93d !important;
+            text-align: center !important;
+            border-radius: 6px !important;
+            margin: 2px 0 !important;
+            padding: 10px !important;
+            border: 2px solid rgba(255, 215, 61, 0.3) !important;
+        }
+
+        .final-slot:hover {
+            background: rgba(255, 215, 61, 0.3) !important;
+            transform: scale(1.02) !important;
+            z-index: 10 !important;
+            box-shadow: 0 4px 15px rgba(255, 215, 61, 0.4) !important;
+        }
+
+        .final-slot.winner {
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d) !important;
+            color: white !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 20px rgba(255, 215, 61, 0.6) !important;
+            border: 2px solid #ffd93d !important;
+            z-index: 20 !important;
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
@@ -406,8 +447,9 @@
         }
     }
 
-    // Función para inicializar split slots en semifinales
+    // Función para inicializar split slots en semifinales y final
     function initializeSemifinalSplitSlots() {
+        // Inicializar semifinales
         const semis = ['semifinals-1-label', 'semifinals-2-label'];
 
         semis.forEach(semiId => {
@@ -453,6 +495,49 @@
                 semiSlot.classList.add('split-initialized');
             }
         });
+
+        // Inicializar Final
+        const finalSlot = document.getElementById('final-label');
+        if (finalSlot && !finalSlot.classList.contains('final-split-initialized')) {
+            // Crear contenedor de split para la final
+            const finalSplitContainer = document.createElement('div');
+            finalSplitContainer.className = 'final-split-container';
+
+            // Crear slots superior e inferior para la final
+            const finalTopSlot = document.createElement('div');
+            finalTopSlot.className = 'final-slot';
+            finalTopSlot.id = 'final-top';
+            finalTopSlot.textContent = 'Esperando semifinalista 1';
+
+            const finalBottomSlot = document.createElement('div');
+            finalBottomSlot.className = 'final-slot';
+            finalBottomSlot.id = 'final-bottom';
+            finalBottomSlot.textContent = 'Esperando semifinalista 2';
+
+            // Agregar al contenedor
+            finalSplitContainer.appendChild(finalTopSlot);
+            finalSplitContainer.appendChild(finalBottomSlot);
+
+            // Reemplazar contenido
+            finalSlot.innerHTML = '';
+            finalSlot.appendChild(finalSplitContainer);
+
+            // Agregar eventos a los slots finales
+            finalTopSlot.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleFinalSlotClick(this, this.textContent.trim());
+            });
+
+            finalBottomSlot.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleFinalSlotClick(this, this.textContent.trim());
+            });
+
+            // Marcar como inicializado
+            finalSlot.classList.add('final-split-initialized');
+        }
     }
 
     // Función para poblar split slots individuales
@@ -529,32 +614,55 @@
     function advanceToFinal(winnerName) {
         console.log('Advancing', winnerName, 'to final');
 
-        const finalSlot = document.getElementById('final-label');
-        if (finalSlot) {
-            finalSlot.textContent = winnerName;
-            finalSlot.classList.add('winner', 'clickable-slot');
+        // Encontrar el siguiente slot vacío en la final
+        const finalTopSlot = document.getElementById('final-top');
+        const finalBottomSlot = document.getElementById('final-bottom');
 
-            // Agregar evento de doble-click para la final
-            finalSlot.addEventListener('dblclick', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                handleFinalMatch(e.target);
-            });
-
-            console.log('Advanced', winnerName, 'to final');
+        if (finalTopSlot && finalTopSlot.textContent.includes('semifinalista 1')) {
+            finalTopSlot.textContent = winnerName;
+            finalTopSlot.classList.add('clickable-slot');
+            console.log('Advanced', winnerName, 'to final-top');
+        } else if (finalBottomSlot && finalBottomSlot.textContent.includes('semifinalista 2')) {
+            finalBottomSlot.textContent = winnerName;
+            finalBottomSlot.classList.add('clickable-slot');
+            console.log('Advanced', winnerName, 'to final-bottom');
         }
     }
 
-    // Función para manejar la final
-    function handleFinalMatch(winnerElement) {
-        const winnerName = winnerElement.textContent.trim();
+    // Función para manejar clic en slots de la final
+    function handleFinalSlotClick(slotElement, playerName) {
+        if (!playerName || playerName.includes('Esperando')) return;
 
-        console.log('Final match clicked:', winnerName);
+        console.log('Final slot clicked:', playerName);
 
-        // Marcar como campeón
-        winnerElement.classList.add('winner');
+        // Encontrar el contenedor final
+        const finalContainer = slotElement.closest('#final-label');
+        if (!finalContainer) return;
 
-        // Actualizar el texto del CHAMPION
+        // Resetear estilos en esta final
+        finalContainer.querySelectorAll('.final-slot').forEach(slot => {
+            slot.classList.remove('winner', 'loser');
+        });
+
+        // Marcar ganador
+        slotElement.classList.add('winner');
+
+        // Marcar otro slot como perdedor
+        finalContainer.querySelectorAll('.final-slot').forEach(slot => {
+            if (slot !== slotElement && !slot.textContent.includes('Esperando')) {
+                slot.classList.add('loser');
+                console.log('Final loser marked:', slot.textContent);
+            }
+        });
+
+        // Coronar campeón
+        crownChampion(playerName);
+    }
+
+    // Función para coronar campeón
+    function crownChampion(winnerName) {
+        console.log('Crowning champion:', winnerName);
+
         const championSlot = document.querySelector('.champion-text');
         if (championSlot) {
             championSlot.textContent = winnerName;
@@ -563,6 +671,7 @@
         }
     }
 
+    
     // Inicializar cuando el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM ready, initializing tournament...');
